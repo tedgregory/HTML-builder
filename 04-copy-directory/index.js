@@ -29,5 +29,5 @@ async function copyFiles(fromDir, toDir, reset = false) {
 }
 
 async function resetDestinationDir (destinationPath) {
-  await access(destinationPath).catch(() => rmdir(destinationPath, {recursive: true})).then(() => mkdir(destinationPath, {recursive: true}));
+  await rmdir(destinationPath, {recursive: true}).catch(err => console.log('RMDIR ERROR:' + err)).then(() => mkdir(destinationPath, {recursive: true}));
 }
