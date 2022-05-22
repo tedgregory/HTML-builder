@@ -37,3 +37,5 @@
 - [copyFile](https://nodejs.org/api/fs.html#fs_fspromises_copyfile_src_dest_mode)  
 - [mkdir](https://nodejs.org/api/fs.html#fs_fspromises_mkdir_path_options)
 
+https://stackoverflow.com/a/56584453
+https://qwtel.com/posts/software/async-generators-in-the-wild/

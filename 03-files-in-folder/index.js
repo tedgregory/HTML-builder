@@ -14,7 +14,7 @@ async function readFiles(dir){
       resTree[item.name].push(path.parse(item.name).name);
       resTree[item.name].push(path.parse(item.name).ext.slice(1));
       let fStats = await stat(path.resolve(__dirname, dir, item.name));
-      //file size converted from bytes to kB by 1024 with 3 digits after point
+      // file size converted from bytes to kB by division 1024 with 3 digits decimal
       resTree[item.name].push(Number(fStats.size / 1024).toFixed(3));
     }
   }
