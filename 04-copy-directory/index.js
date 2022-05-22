@@ -1,1 +1,33 @@
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
+const readdir = util.promisify(fs.readdir);
+const access = util.promisify(fs.access);
+const mkdir = util.promisify(fs.mkdir);
+const rmdir = util.promisify(fs.rmdir);
+const copyFile = util.promisify(fs.copyFile);
+
+const originalDir = path.resolve(__dirname, 'files');
+const destinationDir = path.resolve(__dirname, 'files-copy');
+
+copyFiles(originalDir, destinationDir, true);
+
+async function copyFiles(fromDir, toDir, reset = false) {
+  reset && await resetDestinationDir(toDir);
+  const items = await readdir(fromDir, {withFileTypes: true});
+  for (let item of items) {
+    let 
+      newFrom = path.join(fromDir, item.name), 
+      newTo = path.join(toDir, item.name);
+    if (item.isFile()) {
+      await copyFile(newFrom, newTo);
+    } else {
+      await copyFiles(newFrom, newTo);
+    }
+  }
+}
+
+async function resetDestinationDir (destinationPath) {
+  await access(destinationPath).catch(() => rmdir(destinationPath, {recursive: true})).then(() => mkdir(destinationPath, {recursive: true}));
+}
