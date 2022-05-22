@@ -3,7 +3,6 @@ const path = require('path');
 const util = require('util');
 
 const readdir = util.promisify(fs.readdir);
-const access = util.promisify(fs.access);
 const mkdir = util.promisify(fs.mkdir);
 const rmdir = util.promisify(fs.rmdir);
 const copyFile = util.promisify(fs.copyFile);
