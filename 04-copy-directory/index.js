@@ -4,7 +4,7 @@ const util = require('util');
 
 const readdir = util.promisify(fs.readdir);
 const mkdir = util.promisify(fs.mkdir);
-const rmdir = util.promisify(fs.rmdir);
+const rm = util.promisify(fs.rm);
 const copyFile = util.promisify(fs.copyFile);
 
 const originalDir = path.resolve(__dirname, 'files');
@@ -29,5 +29,5 @@ async function copyFiles(fromDir, toDir) {
 }
 
 async function resetDestinationDir (destinationPath) {
-  await rmdir(destinationPath, {recursive: true}).catch(err => console.log('RMDIR ERROR:' + err)).then(() => mkdir(destinationPath, {recursive: true}));
+  await rm(destinationPath, {recursive: true}).catch(err => console.log('rm ERROR:' + err)).then(() => mkdir(destinationPath, {recursive: true}));
 }
