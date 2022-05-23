@@ -22,12 +22,12 @@ async function copyFiles(fromDir, toDir) {
       newTo = path.join(toDir, item.name);
     if (item.isFile()) {
       await copyFile(newFrom, newTo);
-    } else {
+    } else if (item.isDirectory()){
       await copyFiles(newFrom, newTo);
     }
   }
 }
 
 async function resetDestinationDir (destinationPath) {
-  await rm(destinationPath, {recursive: true}).catch(err => console.log('rm ERROR:' + err)).then(() => mkdir(destinationPath, {recursive: true}));
+  await rm(destinationPath, {recursive: true, force: true}).then(() => mkdir(destinationPath, {recursive: true})).catch(err => {throw new Error(err);});
 }
