@@ -9,7 +9,6 @@ const readFile = util.promisify(fs.readFile);
 const mkdir = util.promisify(fs.mkdir);
 const rm = util.promisify(fs.rm);
 const copyFile = util.promisify(fs.copyFile);
-// const readline = require('readline');
 
 const distDirPath = path.resolve(__dirname, 'project-dist');
 const stylesDir = path.resolve(__dirname, 'styles');
@@ -19,7 +18,6 @@ const htmlBundlePath = path.resolve(distDirPath, 'index.html');
 const componentsDir = path.resolve(__dirname, 'components');
 const TAB = ' ';
 
-
 // Main steps
 // Prepare dist dir
 resetDestinationDir(distDirPath, true)
@@ -28,16 +26,18 @@ resetDestinationDir(distDirPath, true)
     await copyFiles(path.resolve(__dirname, 'assets'), path.resolve(distDirPath, 'assets'));
     // merge styles into one css
     await createCssBundle(stylesDir, cssBundlePath);
-    // builds template
+    // builds template bundle
     await templateBuilder(entryTplPath, componentsDir, htmlBundlePath); 
   })
   .catch((e) => console.log('ERROR: ' + e));
 
-/** takes a root template, replaces all placeholders with respective component's content
+// Tools 
+
+/** takes a root template, replaces all placeholders with respective component's content and puts a bundle into the target file
  * 
- * @param {string} indexTplPath full path to entry html template 
- * @param {string} compDirName 
- * @param {string} distPath 
+ * @param {string} indexTplPath path to entry html template 
+ * @param {string} compDirName path to components templates
+ * @param {string} htmlBundlePath path to result index.html bundle
  */
 async function templateBuilder (indexTplPath, compDirPath, htmlBundlePath){
   let componentsContent = await parseComponentTemplates(compDirPath);
@@ -67,7 +67,7 @@ async function templateBuilder (indexTplPath, compDirPath, htmlBundlePath){
 /** non-recursively reads contents of html files into an object
  * 
  * @param {string} dir directory to search
- * @returns {Object} with key - file name without extension, value - it's content string
+ * @returns {Object} result object with key - file name without extension, value - it's content string
  */
 async function parseComponentTemplates(dir) {
   let resTree = {};
@@ -101,10 +101,11 @@ async function copyFiles(fromDir, toDir) {
     }
   }
 }
+
 /** Clears the destination and recreates an ampty dir
  * 
  * @param {string} destinationPath 
- *
+ * @param {boolean} remake directs whether a directory must be purged first
  */
 async function resetDestinationDir (destinationPath, remake = false) {
   if (remake) {
@@ -112,10 +113,11 @@ async function resetDestinationDir (destinationPath, remake = false) {
   }
   await mkdir(destinationPath, {recursive: true}).catch(() => console.log('MKDIR ERROR'));
 }
+
 /** Reads css files from specified path and returns a list of their contents
  * 
  * @param {string} fromDir 
- * @returns {Array}
+ * @returns {Object} key is a string filename.css, value - it's textual content
  */
 async function parseStyles(fromDir) {
   const items = await readdir(fromDir, {withFileTypes: true});
