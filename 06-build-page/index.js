@@ -137,12 +137,18 @@ async function parseStyles(fromDir) {
 async function createCssBundle (stylesPath, pathToBundle) {
   parseStyles(stylesPath)
     .then(async styleData => {
+      let {['header.css']: header, ['main.css']: main, ['footer.css']: footer, ...restStyles} = styleData;
       // first clear existing text
       await writeFile(pathToBundle, '');
       // add components according to html markup
-      await appendFile(pathToBundle, styleData['header.css']);
-      await appendFile(pathToBundle, styleData['main.css']);
-      await appendFile(pathToBundle, styleData['footer.css']);
+      await appendFile(pathToBundle, header);
+      await appendFile(pathToBundle, main);
+      await appendFile(pathToBundle, footer);
+      for (let chunk in restStyles){
+        if (restStyles[chunk].length){
+          await appendFile(pathToBundle, restStyles[chunk]);
+        }
+      }
     })
     .catch(err => console.log('Error packing styles bundle:' + err));
 }
