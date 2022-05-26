@@ -16,7 +16,7 @@ const cssBundlePath = path.resolve(distDirPath, 'style.css');
 const entryTplPath = path.resolve(__dirname, 'template.html');
 const htmlBundlePath = path.resolve(distDirPath, 'index.html');
 const componentsDir = path.resolve(__dirname, 'components');
-const TAB = ' ';
+const TAB = ' '; // set '\t' if using tabs, and a SINGLE! space if spaces. it's used just to keep existing indentation, not for smart indentation
 
 // Main steps
 // Prepare dist dir
@@ -42,7 +42,7 @@ resetDestinationDir(distDirPath, true)
 async function templateBuilder (indexTplPath, compDirPath, htmlBundlePath){
   let componentsContent = await parseComponentTemplates(compDirPath);
   let indexTemplateContent =  (await readFile(indexTplPath)).toString();
-  let placeholdersSet = indexTemplateContent.match(new RegExp(`[${TAB}]*.?{{.+}}`, 'g'));
+  let placeholdersSet = await indexTemplateContent.match(new RegExp(`[${TAB}]*.?{{.+}}`, 'g'));
   placeholdersSet
     .map(el => {
       return {
